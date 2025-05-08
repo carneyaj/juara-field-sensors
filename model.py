@@ -10,7 +10,8 @@ labels_file = "labels"
 class Model():
 
     def __init__(self, model, threads=2):
-        self.model_path = model + ".tflite"
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.model_path = os.path.join(base_dir, model + ".tflite")
         print(self.model_path)
 
         self.myinterpreter = tflite.Interpreter(model_path=self.model_path, num_threads=threads)
@@ -22,7 +23,7 @@ class Model():
 
          # Load labels
         self.CLASSES = []
-        labelspath = labels_file + '.txt'
+        labelspath = os.path.join(base_dir, labels_file + ".txt")
         with open(labelspath, 'r') as lfile:
             for line in lfile.readlines():
                 self.CLASSES.append(line.replace('\n', '').split("_")[1])

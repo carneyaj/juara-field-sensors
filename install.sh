@@ -21,11 +21,12 @@ pip3 install -U $WHL
 
 pip3 install numpy==1.26.4
 
-GHURL="https://raw.githubusercontent.com/birdnet-team/BirdNET-Analyzer/master"
-MODEL="/birdnet_analyzer/checkpoints/V2.4/BirdNET_GLOBAL_6K_V2.4_Model_INT8.tflite"
-LABELS="/birdnet_analyzer/labels/V2.4/BirdNET_GLOBAL_6K_V2.4_Labels_en_uk.txt"
-curl -L -o model_int8.tflite $GHURL$MODEL
-curl -L -o labels.txt $GHURL$LABELS
+# # Old paths, now included in repo
+# GHURL="https://raw.githubusercontent.com/birdnet-team/BirdNET-Analyzer/master"
+# MODEL="/birdnet_analyzer/checkpoints/V2.4/BirdNET_GLOBAL_6K_V2.4_Model_INT8.tflite"
+# LABELS="/birdnet_analyzer/labels/V2.4/BirdNET_GLOBAL_6K_V2.4_Labels_en_uk.txt"
+# curl -L -o model_int8.tflite $GHURL$MODEL
+# curl -L -o labels.txt $GHURL$LABELS
 
 CONFIG_TXT=(
     "dtoverlay=pi3-miniuart-bt"
@@ -48,14 +49,19 @@ done
 
 pip3 install pimoroni-bme280 st7735 ltr559 pillow fonts font-roboto gpiod gpiodevice
 
-
-
-
-
-git clone https://github.com/pimoroni/enviroplus-python
-cd enviroplus-python
-./install.sh
-cd ..
+# # Not needed for now
+# git clone https://github.com/pimoroni/enviroplus-python
+# cd enviroplus-python
+# ./install.sh
+# cd ..
 
 git clone https://github.com/carneyaj/juara-field-sensors.git
 cd juara-field-sensors
+
+read -p "Do you want to reboot now? (y/n): " confirm
+if [[ "$confirm" =~ ^[Yy]$ ]]; then
+    echo "Rebooting..."
+    sudo reboot
+else
+    echo "Reboot canceled."
+fi
