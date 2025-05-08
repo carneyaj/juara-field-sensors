@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get update -y && sudo apt-get upgrade -y
+sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install -y git
 sudo apt-get install -y libasound2-dev portaudio19-dev libatlas-base-dev
 
