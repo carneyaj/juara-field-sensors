@@ -14,3 +14,4 @@ to activat the venv, then
 ```
 python juara-field-sensors/main.py
 ```
+Note: hold your hand over the light sensor for 3s to turn the display on and off.
