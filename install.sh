@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sudo apt update && sudo apt upgrade -y
-sudo apt-get install git
-sudo apt-get install libasound2-dev portaudio19-dev libatlas-base-dev
+sudo apt-get update -y && sudo apt-get upgrade -y
+sudo apt-get install -y git
+sudo apt-get install -y libasound2-dev portaudio19-dev libatlas-base-dev
 
 python3 -m venv myenv
 source myenv/bin/activate
