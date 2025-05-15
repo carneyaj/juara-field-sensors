@@ -28,6 +28,30 @@ pip3 install numpy==1.26.4
 # curl -L -o model_int8.tflite $GHURL$MODEL
 # curl -L -o labels.txt $GHURL$LABELS
 
+
+SETUP_CMDS=(
+	"printf \"Setting up i2c and SPI..\\n\""
+	"sudo raspi-config nonint do_spi 0"
+	"sudo raspi-config nonint do_i2c 0"
+	"printf \"Setting up serial for PMS5003..\\n\""
+	"sudo raspi-config nonint do_serial_cons 1"
+	"sudo raspi-config nonint do_serial_hw 0"
+)
+
+for ((i = 0; i < ${#SETUP_CMDS[@]}; i++)); do
+	CMD="${SETUP_CMDS[$i]}"
+	# Attempt to catch anything that touches config.txt and trigger a backup
+	if [[ "$CMD" == *"raspi-config"* ]] || [[ "$CMD" == *"$CONFIG_DIR/$CONFIG_FILE"* ]] || [[ "$CMD" == *"\$CONFIG_DIR/\$CONFIG_FILE"* ]]; then
+		do_config_backup
+	fi
+	if [[ ! "$CMD" == printf* ]]; then
+		printf "Running: \"%s\"\n" "$CMD"
+	fi
+	eval "$CMD"
+	check_for_error
+done
+
+
 CONFIG_TXT=(
     "dtoverlay=pi3-miniuart-bt"
     "dtoverlay=adau7002-simple"
