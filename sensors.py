@@ -53,10 +53,10 @@ class SingleReadSensors():
                 aqi_str = str(self.pms.read())
                 aqi_cats = aqi_str.split("\n")
                 for cat in aqi_cats:
-                    print(cat)
-                    k, v = cat.split(":")
-                    v = int(v.replace(" ", ""))
-                    sensor_dict[k] = v
+                    if len(cat.split(":")) == 2:
+                        k, v = cat.split(":")
+                        v = int(v.replace(" ", ""))
+                        sensor_dict[k] = v
             except self.ReadTimeoutError:
                 self.pms = PMS5003()
         return sensor_dict
