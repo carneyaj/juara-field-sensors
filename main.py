@@ -43,12 +43,12 @@ try:
         rows += 1
         print(f"{rows} rows logged, {len(df.columns)} columns")
 
-    df.to_csv(f"~/mnt/usb/{date_time}.csv.gz", index=False, compression='gzip')
+    df.to_csv(f"/mnt/usb/{date_time}.csv.gz", index=False, compression='gzip')
     print(f"Data saved and compressed to data/{date_time}.csv.gz")
     time.sleep(5)
     print("Shutting down...")
     try:
-        os.system("sudo halt")
+        os.system("sudo reboot")
     except:
         print("Error shutting down")
 
