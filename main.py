@@ -22,14 +22,14 @@ sensors = SingleReadSensors()
 stream.start()
 
 try:
-    date_time = time.strftime("%Y-%m-%d %H:%M:%S")
+    date_time = time.strftime("%Y-%m-%d_%H_%M_%S")
     file_start_time = time.time()
     df = pd.DataFrame()
     rows = 0
     while time.time() - file_start_time < 5 * 2 * 5:
         start_time = time.time()
         full_dict = sensors.get()
-        full_dict["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
+        full_dict["timestamp"] = time.strftime("%Y-%m-%d_%H_%M_%S")
         while time.time() - start_time < 5 * 2:
             data = stream.get_audio()
             timestamp = time.time()
@@ -44,10 +44,13 @@ try:
         print(f"{rows} rows logged, {len(df.columns)} columns")
 
     df.to_csv(f"~/mnt/usb/{date_time}.csv.gz", index=False, compression='gzip')
-    print(f"Data saved and compressed to data/{date}.csv.gz")
+    print(f"Data saved and compressed to data/{date_time}.csv.gz")
     time.sleep(5)
     print("Shutting down...")
-    os.system("sudo halt")
+    try:
+        os.system("sudo halt")
+    except:
+        print("Error shutting down")
 
 except KeyboardInterrupt:
     display.turn_off()
