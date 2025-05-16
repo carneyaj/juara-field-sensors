@@ -4,6 +4,8 @@ sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install -y git
 sudo apt-get install -y python3-dev tmux python3-pip python3-venv build-essential libasound2-dev portaudio19-dev libatlas-base-dev
 
+mkdir ~/data
+
 python3 -m venv myenv
 source myenv/bin/activate
 
@@ -105,7 +107,7 @@ pip3 install pimoroni-bme280 enviroplus pms5003 st7735 ltr559 pillow fonts font-
 # ./install.sh
 # cd ..
 
-git clone https://github.com/carneyaj/juara-field-sensors.git
+
 cd juara-field-sensors
 
 read -p "Do you want to reboot now? (y/n): " confirm

@@ -19,7 +19,7 @@ try:
     file_start_time = time.time()
     df = pd.DataFrame()
     rows = 0
-    while time.time() - file_start_time > 5 * 2 * 5:
+    while time.time() - file_start_time < 5 * 2 * 5:
         start_time = time.time()
         full_dict = sensors.get()
         full_dict["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -36,7 +36,7 @@ try:
         df = pd.concat([df, pd.DataFrame([full_dict])], ignore_index=True)
         rows += 1
         print(f"{rows} rows logged, {len(df.columns)} columns")
-    df.to_csv(f"data/{date}.csv.gz", index=False, , compression='gzip')
+    df.to_csv(f"~/data/{date}.csv.gz", index=False, compression='gzip')
     print(f"Data saved and compressed to data/{date}.csv.gz")
     time.sleep(5)
     print("Shutting down...")
