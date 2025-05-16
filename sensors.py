@@ -56,7 +56,7 @@ class SingleReadSensors():
                     k, v = cat.split(":")
                     v = int(v.replace(" ", ""))
                     sensor_dict[k] = v
-            except ReadTimeoutError:
+            except self.ReadTimeoutError:
                 self.pms = PMS5003()
         return sensor_dict
             
