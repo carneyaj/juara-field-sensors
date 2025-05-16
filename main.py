@@ -30,7 +30,6 @@ try:
         start_time = time.time()
         full_dict = sensors.get()
         full_dict["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
-        full_dict["date"] = date
         while time.time() - start_time < 5 * 2:
             data = stream.get_audio()
             timestamp = time.time()
