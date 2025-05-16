@@ -7,9 +7,9 @@ if [ -z "$1" ]; then
 fi
 
 # Variables
-PI_USER=pi
+PI_USER=juara
 PI_HOST=$1
-REMOTE_PATH=/home/pi/code/my_project
+REMOTE_PATH=/home/pi/juara-field-sensors
 LOCAL_PATH=./
 
 # Sync code to Pi
