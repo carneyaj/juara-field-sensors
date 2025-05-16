@@ -5,49 +5,49 @@ from collections import deque
 class SingleReadSensors():
 
     def __init__(self):
-        LIVE = []
+        self.LIVE = []
         try:
             from bme280 import BME280
             self.bme280 = BME280()
-            LIVE += ["bme"]
+            self.LIVE += ["bme"]
         except:
             pass
         try:
             from ltr559 import LTR559
             self.ltr559 = LTR559()
-            LIVE += ["ltr"]
+            self.LIVE += ["ltr"]
         except:
             pass
         try:
             from enviroplus import gas
             self.gas = gas
-            LIVE += ["gas"]
+            self.LIVE += ["gas"]
         except:
             pass
         try:
             from pms5003 import PMS5003, ReadTimeoutError
             self.pms = PMS5003()
-            LIVE += ["aqi"]
+            self.LIVE += ["aqi"]
         except:
             pass
 
     def get(self) -> dict:
         sensor_dict = {}
-        if "bme" in LIVE:
+        if "bme" in self.LIVE:
             sensor_dict.update({
                 "temp": self.bme280.get_temperature(),
                 "pressure": self.bme280.get_pressure(),
                 "humidity": self.bme280.get_humidity(),
             })
-        if "ltr" in LIVE:
+        if "ltr" in self.LIVE:
             sensor_dict['lux'] = self.ltr559.get_lux()
-        if "gas" in LIVE:
+        if "gas" in self.LIVE:
             sensor_dict.update({
                 "gas-reducing": self.gas.read_reducing(),
                 "gas-oxidising": self.gas.oxidising(),
                 "nh3": self.gas.nh3(),
             })
-        if "aqi" in LIVE:
+        if "aqi" in self.LIVE:
             try:
                 aqi_str = self.pms.read()
                 aqi_cats = aqi_str.split("\n")
