@@ -44,8 +44,8 @@ class SingleReadSensors():
         if "gas" in self.LIVE:
             sensor_dict.update({
                 "gas-reducing": self.gas.read_reducing(),
-                "gas-oxidising": self.gas.oxidising(),
-                "nh3": self.gas.nh3(),
+                "gas-oxidising": self.gas.read_oxidising(),
+                "nh3": self.gas.read_nh3(),
             })
         if "aqi" in self.LIVE:
             try:
