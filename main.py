@@ -2,17 +2,24 @@ import numpy as np
 import pandas as pd
 import time
 import os
+import subprocess
 
 from model import Model
 from sound import Stream
 from sensors import SingleReadSensors
+
+def ensure_usb_mounted(mount_point="/mnt/usb", device="/dev/sda1"):
+    if not os.path.ismount(mount_point):
+        os.makedirs(mount_point, exist_ok=True)
+        subprocess.run(["sudo", "mount", device, mount_point], check=True)
+
+ensure_usb_mounted()
 
 model = Model("model_int8")
 stream = Stream(device="adau7002")
 sensors = SingleReadSensors()
 
 stream.start()
-date = time.strftime("%Y-%m-%d")
 
 try:
     date_time = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -36,11 +43,12 @@ try:
         df = pd.concat([df, pd.DataFrame([full_dict])], ignore_index=True)
         rows += 1
         print(f"{rows} rows logged, {len(df.columns)} columns")
-    df.to_csv(f"~/data/{date}.csv.gz", index=False, compression='gzip')
+
+    df.to_csv(f"~/mnt/usb/{date_time}.csv.gz", index=False, compression='gzip')
     print(f"Data saved and compressed to data/{date}.csv.gz")
     time.sleep(5)
     print("Shutting down...")
-    # os.system("sudo halt")
+    os.system("sudo halt")
 
 except KeyboardInterrupt:
     display.turn_off()
