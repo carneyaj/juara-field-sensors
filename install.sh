@@ -97,7 +97,7 @@ for CONFIG_LINE in "${CONFIG_TXT[@]}"; do
     fi
 done
 
-pip3 install pimoroni-bme280 enviroplus pms5003 st7735 ltr559 pillow fonts font-roboto gpiod gpiodevice tmux
+pip3 install pimoroni-bme280 enviroplus pms5003 st7735 ltr559 pillow fonts font-roboto gpiod gpiodevice pandas
 
 # # Not needed for now
 # git clone https://github.com/pimoroni/enviroplus-python

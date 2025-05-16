@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import time
+import os
 
 from model import Model
 from sound import Stream
@@ -11,12 +12,18 @@ stream = Stream(device="adau7002")
 sensors = SingleReadSensors()
 
 stream.start()
+date = time.strftime("%Y-%m-%d")
+
 try:
+    date_time = time.strftime("%Y-%m-%d %H:%M:%S")
+    file_start_time = time.time()
     df = pd.DataFrame()
     rows = 0
-    while True:
+    while time.time() - file_start_time > 5 * 2 * 5:
         start_time = time.time()
         full_dict = sensors.get()
+        full_dict["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
+        full_dict["date"] = date
         while time.time() - start_time < 5 * 2:
             data = stream.get_audio()
             timestamp = time.time()
@@ -29,7 +36,11 @@ try:
         df = pd.concat([df, pd.DataFrame([full_dict])], ignore_index=True)
         rows += 1
         print(f"{rows} rows logged, {len(df.columns)} columns")
-        
+    pd.to_csv(df, f"data/{date}.csv", index=False)
+    print(f"Data saved to data/{date}.csv")
+    time.sleep(5)
+    print("Shutting down...")
+    # os.system("sudo halt")
 
 except KeyboardInterrupt:
     display.turn_off()
