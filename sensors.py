@@ -9,26 +9,27 @@ class SingleReadSensors():
         try:
             from bme280 import BME280
             self.bme280 = BME280()
-            self.LIVE += ["bme"]
-        except:
+            self.LIVE.append("bme")
+        except ImportError:
             pass
         try:
             from ltr559 import LTR559
             self.ltr559 = LTR559()
-            self.LIVE += ["ltr"]
-        except:
+            self.LIVE.append("ltr")
+        except ImportError:
             pass
         try:
             from enviroplus import gas
             self.gas = gas
-            self.LIVE += ["gas"]
-        except:
+            self.LIVE.append("gas")
+        except ImportError:
             pass
         try:
             from pms5003 import PMS5003, ReadTimeoutError
             self.pms = PMS5003()
-            self.LIVE += ["aqi"]
-        except:
+            self.ReadTimeoutError = ReadTimeoutError
+            self.LIVE.append("aqi")
+        except ImportError:
             pass
 
     def get(self) -> dict:
@@ -49,10 +50,10 @@ class SingleReadSensors():
             })
         if "aqi" in self.LIVE:
             try:
-                aqi_str = self.pms.read()
+                aqi_str = str(self.pms.read())
                 aqi_cats = aqi_str.split("\n")
                 for cat in aqi_cats:
-                    k, v = aqi_str.split(":")
+                    k, v = cat.split(":")
                     v = int(v.replace(" ", ""))
                     sensor_dict[k] = v
             except ReadTimeoutError:
