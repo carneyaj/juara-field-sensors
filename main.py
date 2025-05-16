@@ -36,8 +36,8 @@ try:
         df = pd.concat([df, pd.DataFrame([full_dict])], ignore_index=True)
         rows += 1
         print(f"{rows} rows logged, {len(df.columns)} columns")
-    pd.to_csv(df, f"data/{date}.csv", index=False)
-    print(f"Data saved to data/{date}.csv")
+    df.to_csv(f"data/{date}.csv.gz", index=False, , compression='gzip')
+    print(f"Data saved and compressed to data/{date}.csv.gz")
     time.sleep(5)
     print("Shutting down...")
     # os.system("sudo halt")
