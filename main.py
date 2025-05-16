@@ -19,6 +19,7 @@ try:
         full_dict = sensors.get()
         while time.time() - start_time < 5 * 2:
             data = stream.get_audio()
+            timestamp = time.time()
             labels = model.predict_threshold([data], min_p=0.5, timestamp=timestamp)
             for label, _ in labels:
                 if label in full_dict:
