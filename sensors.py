@@ -1,9 +1,64 @@
 import time
 import threading
 from collections import deque
-from bme280 import BME280
-from ltr559 import LTR559
 
+class SingleReadSensors():
+
+    def __init__(self):
+        LIVE = []
+        try:
+            from bme280 import BME280
+            self.bme280 = BME280()
+            LIVE += ["bme"]
+        except:
+            pass
+        try:
+            from ltr559 import LTR559
+            self.ltr559 = LTR559()
+            LIVE += ["ltr"]
+        except:
+            pass
+        try:
+            from enviroplus import gas
+            self.gas = gas
+            LIVE += ["gas"]
+        except:
+            pass
+        try:
+            from pms5003 import PMS5003, ReadTimeoutError
+            self.pms = PMS5003()
+            LIVE += ["aqi"]
+        except:
+            pass
+
+    def get(self) -> dict:
+        sensor_dict = {}
+        if "bme" in LIVE:
+            sensor_dict.update({
+                "temp": self.bme280.get_temperature(),
+                "pressure": self.bme280.get_pressure(),
+                "humidity": self.bme280.get_humidity(),
+            })
+        if "ltr" in LIVE:
+            sensor_dict['lux'] = self.ltr559.get_lux()
+        if "gas" in LIVE:
+            sensor_dict.update({
+                "gas-reducing": self.gas.read_reducing(),
+                "gas-oxidising": self.gas.oxidising(),
+                "nh3": self.gas.nh3(),
+            })
+        if "aqi" in LIVE:
+            try:
+                aqi_str = self.pms.read()
+                aqi_cats = aqi_str.split("\n")
+                for cat in aqi_cats:
+                    k, v = aqi_str.split(":")
+                    v = int(v.replace(" ", ""))
+                    sensor_dict[k] = v
+            except ReadTimeoutError:
+                self.pms = PMS5003()
+        return sensor_dict
+            
 
 class Sensors():
 

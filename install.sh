@@ -2,11 +2,37 @@
 
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get install -y git
-sudo apt-get install -y python3-dev python3-pip python3-venv build-essential libasound2-dev portaudio19-dev libatlas-base-dev
+sudo apt-get install -y python3-dev tmux python3-pip python3-venv build-essential libasound2-dev portaudio19-dev libatlas-base-dev
 
 python3 -m venv myenv
 source myenv/bin/activate
-echo 'alias act="source myenv/bin/activate"' >> ~/.bashrc
+
+VENV_DIR="$HOME/myenv"
+
+# Define the marker to identify the block in .bashrc
+MARKER="# >>> Auto-activate venv on SSH login >>>"
+
+# Check if the marker already exists in .bashrc
+if grep -q "$MARKER" "$HOME/.bashrc"; then
+    echo "Auto-activation block already exists in .bashrc. No changes made."
+else
+    echo "Appending auto-activation block to .bashrc..."
+
+    cat <<EOF >> "$HOME/.bashrc"
+
+$MARKER
+if [ -n "\$SSH_CONNECTION" ]; then
+    if [ -f "$VENV_DIR/bin/activate" ]; then
+        source "$VENV_DIR/bin/activate"
+        echo "Activated virtual environment: $VENV_DIR"
+    fi
+fi
+# <<< Auto-activate venv on SSH login <<<
+EOF
+
+    echo "Auto-activation block appended to .bashrc."
+fi
+
 source ~/.bashrc
 
 pip3 install sounddevice
@@ -71,7 +97,7 @@ for CONFIG_LINE in "${CONFIG_TXT[@]}"; do
     fi
 done
 
-pip3 install pimoroni-bme280 st7735 ltr559 pillow fonts font-roboto gpiod gpiodevice
+pip3 install pimoroni-bme280 enviroplus pms5003 st7735 ltr559 pillow fonts font-roboto gpiod gpiodevice tmux
 
 # # Not needed for now
 # git clone https://github.com/pimoroni/enviroplus-python
