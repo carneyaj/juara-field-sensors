@@ -1,37 +1,34 @@
 import numpy as np
+import pandas as pd
 import time
 
 from model import Model
 from sound import Stream
-from display import Display
-from sensors import Sensors
+from sensors import SingleReadSensors
 
 model = Model("model_int8")
 stream = Stream(device="adau7002")
-display = Display()
-sensors = Sensors()
+sensors = SingleReadSensors()
 
 stream.start()
-last_update = time.time()
 try:
+    df = pd.DataFrame()
+    rows = 0
     while True:
-        if sensors.mode == 1:
-            display.turn_on()
-        else:
-            display.turn_off()
-
-        data = stream.get_audio()
-        timestamp = time.time()
-        labels = model.predict_threshold([data], min_p=0.5, timestamp=timestamp)
-        # display.clear_left()
-        for label, _ in labels:
-            display.print_left(label)
-        if time.time() > last_update + 5:
-            w = sensors.get_average()
-            display.clear_right()
-            for name, value in w.items():
-                display.print_right(f"{name}: {value:.1f}", stdout=False)
-            last_update = time.time()
+        start_time = time.time()
+        full_dict = sensors.get()
+        while time.time() - start_time < 5 * 2:
+            data = stream.get_audio()
+            labels = model.predict_threshold([data], min_p=0.5, timestamp=timestamp)
+            for label, _ in labels:
+                if label in full_dict:
+                    full_dict[label] += 1
+                else:
+                    full_dict[label] = 1
+        df = pd.concat([df, pd.DataFrame([full_dict])], ignore_index=True)
+        rows += 1
+        print(f"{rows} rows logged, {len(df.columns)} columns")
+        
 
 except KeyboardInterrupt:
     display.turn_off()
