@@ -21,12 +21,16 @@ class SingleReadSensors():
         try:
             from enviroplus import gas
             self.gas = gas
+            # test in order to error out
+            self.gas.read_all()
             self.LIVE.append("gas")
         except:
             pass
         try:
             from pms5003 import PMS5003, ReadTimeoutError
             self.pms = PMS5003()
+            # test in order to error out 
+            self.pms.read()
             self.ReadTimeoutError = ReadTimeoutError
             self.LIVE.append("aqi")
         except:
