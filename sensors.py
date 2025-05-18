@@ -10,26 +10,26 @@ class SingleReadSensors():
             from bme280 import BME280
             self.bme280 = BME280()
             self.LIVE.append("bme")
-        except ImportError:
+        except:
             pass
         try:
             from ltr559 import LTR559
             self.ltr559 = LTR559()
             self.LIVE.append("ltr")
-        except ImportError:
+        except:
             pass
         try:
             from enviroplus import gas
             self.gas = gas
             self.LIVE.append("gas")
-        except ImportError:
+        except:
             pass
         try:
             from pms5003 import PMS5003, ReadTimeoutError
             self.pms = PMS5003()
             self.ReadTimeoutError = ReadTimeoutError
             self.LIVE.append("aqi")
-        except ImportError:
+        except:
             pass
 
     def get(self) -> dict:
