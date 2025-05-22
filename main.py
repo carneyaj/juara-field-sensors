@@ -26,11 +26,11 @@ try:
     file_start_time = time.time()
     df = pd.DataFrame()
     rows = 0
-    while time.time() - file_start_time < 5 * 2 * 5:
+    while time.time() - file_start_time < 5 * 2 * 6 * 10:
         start_time = time.time()
         full_dict = sensors.get()
         full_dict["timestamp"] = time.strftime("%Y-%m-%d_%H_%M_%S")
-        while time.time() - start_time < 5 * 2:
+        while time.time() - start_time < 5 * 2 * 6:
             data = stream.get_audio()
             timestamp = time.time()
             labels = model.predict_threshold([data], min_p=0.5, timestamp=timestamp)
